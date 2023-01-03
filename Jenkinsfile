@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools{
+    jdk "myjdk8"
+    }
     environment {
         //be sure to replace "bhavukm" with your own Docker Hub username
         DOCKER_IMAGE_NAME = "wafasidd/train-schedule"
