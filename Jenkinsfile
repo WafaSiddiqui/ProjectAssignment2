@@ -19,9 +19,7 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                    app.inside {
-                        sh 'echo Hello, World!'
-                    }
+                    
                 }
             }
         }
