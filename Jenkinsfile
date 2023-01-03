@@ -2,7 +2,9 @@ pipeline {
     agent any
     environment {
         //be sure to replace "bhavukm" with your own Docker Hub username
-        DOCKER_IMAGE_NAME = "wafasidd/train-schedule"
+        registry = "wafasidd/train-schedule"
+        registryCredential = 'dockerHub'
+        dockerImage=''
     }
     stages {
         stage('Build') {
@@ -16,7 +18,7 @@ pipeline {
            
             steps {
                 script {
-                    app = docker.build(DOCKER_IMAGE_NAME)
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
                     app.inside {
                         sh 'echo Hello, World!'
                     }
@@ -26,12 +28,11 @@ pipeline {
         stage('Push Docker Image') {
           
             steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
+                 script {
+                    docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
                     }
-                }
+                 }
             }
         }
         stage('CanaryDeploy') {
