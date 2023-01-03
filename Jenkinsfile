@@ -37,20 +37,21 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to K8s')
-        {
-        steps{
-          sshagent(['k8s-jenkins'])
-          {
-            sh 'scp -r -o StrictHostKeyChecking=no train-schedule-kube.yaml edureka@172.31.7.213:/path'
-              script{
-                  try{
-                      sh 'ssh edureka@172.31.7.213 kubectl apply -f train-schedule-kube.yaml'
-                  }
-                  catch(error)
-                  {}
-              }
-          }
+        stage('Deploy to K8s'){
+            steps{
+                sshagent(['k8s-jenkins'])
+                {
+                    sh 'scp -r -o StrictHostKeyChecking=no train-schedule-kube.yaml edureka@172.31.7.213:/path'
+                    script{
+                        try{
+                            sh 'ssh edureka@172.31.7.213 kubectl apply -f train-schedule-kube.yaml'
+                        }
+                        catch(error)
+                        {
+                        }
+                    }
+                }
+            }
         }
-      }
     }
+}
